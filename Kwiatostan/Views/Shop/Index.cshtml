@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Kwiatostan.Models.Product>
+
+@{
+    ViewData["Title"] = "Sklep";
+}
+
+<h3>Sklep</h3>
+
+
+
+
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <!-- Tutaj znajdują się karty produktów -->
+            <!-- Każda karta jest zawarta w <div class="col mb-5">...</div> -->
+            <!-- Powtarzają się różne karty, więc poniżej przedstawiam jedną z nich -->
+            @foreach (var item in Model)
+            {
+                <div class="col mb-5">
+                    <div class="card h-100 shadow">
+                        <!-- Added 'shadow' for box shadow -->
+                        @if (item.ImageFilename != null)
+                        {
+                            <div class="d-flex justify-content-center align-items-center" style="height: 150px; overflow: hidden;">
+                                <img style="object-fit: contain; max-height: 100%;" class="card-img-top" src="~/images/@item.ImageFilename" alt="Image">
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="d-flex justify-content-center align-items-center" style="height: 150px; overflow: hidden;">
+                                <img style="object-fit: contain; max-height: 100%;" class="card-img-top" src="~/images/no_image.jpg" alt="No Image">
+                            </div>
+                        }
+
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">@item.Name</h5>
+                                @item.Price
+                            </div>
+                        </div>
+
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center">
+                                <a class="btn btn-outline-dark mt-auto" asp-action="Details" asp-route-id="@item.Id">Szczegóły</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            }
+        </div>
+    </div>
+</section>

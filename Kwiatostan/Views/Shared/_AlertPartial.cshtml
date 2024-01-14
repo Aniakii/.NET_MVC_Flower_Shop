@@ -1,0 +1,17 @@
+﻿@if (TempData["AlertMessage"] != null && TempData["AlertType"] != null)
+{
+    <div id ="partialAlert" class="alert alert-@TempData["AlertType"] alert-dismissible" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        @TempData["AlertMessage"]
+    </div>
+
+}
+
+@if (TempData["AlertTimeout"] != null){
+    <script>
+        window.setTimeout(function () {
+            $("#partialAlert").fadeTo(700, 0).slideUp(700, function () { })
+        }, @TempData["AlertTimeout"]);
+    </script>
+}
+

@@ -1,0 +1,24 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Register confirmation";
+}
+
+<h1>@ViewData["Title"]</h1>
+@{
+    if (@Model.DisplayConfirmAccountLink)
+    {
+<p>
+    Ta aplikacja nie ma jeszcze skonfugurowanego potiwerdzenia emailem. Zamiast tego klinkij w ten link, aby
+    potwierdzić utworzenie konta:
+    <a id="confirm-link" href="@Model.EmailConfirmationUrl">Kliknij aby potwierdzić rejestrację</a>
+</p>
+    }
+    else
+    {
+<p>
+    Sprawdź email aby potwierdzić rejestrację.
+</p>
+    }
+}
+
