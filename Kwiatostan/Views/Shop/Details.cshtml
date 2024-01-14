@@ -1,48 +1,46 @@
 ﻿@model Kwiatostan.Models.Product
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Szczegóły";
 }
 
-<h1>Details</h1>
+<h3>Szczegóły produktu</h3>
+
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6">
+                @if (Model.ImageFilename != null)
+                {
+                    <img style="border-radius:20px;border: 2px solid black" class="card-img-top mb-5 mb-md-0" src="~/images/@Model.ImageFilename" alt="Image">
+                }
+                else
+                {
+                    <img style="border-radius:20px;border: 2px solid black" class="card-img-top mb-5 mb-md-0" src="~/images/no_image.jpg" alt="..." />
+                }
+            </div>
+            <div class="col-md-6">
+                <div class="small mb-1">Kategoria: @Model.Category.Name</div>
+                <h1 class="display-5 fw-bolder">@Model.Name</h1>
+                <div class="fs-5 mb-5">
+                    <span>@Model.Price</span>
+                </div>
+                <p class="lead">@Model.Description</p>
+                <div class="d-flex">
+                    <button class="btn btn-primary flex-shrink-0" type="button">
+                        <i class="bi-cart-fill me-1"></i>
+                        Dodaj do koszyka
+                    </button>
+                </div>
+                <div class="alert mt-2 @ViewBag.StockQuantityAlertType" role="alert">
+                    <strong> @ViewBag.StockQuantityMessage </strong> (@Model.StockQuantity)
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 
 <div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageFilename)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageFilename)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Powrót do sklepu</a>
 </div>

@@ -38,7 +38,9 @@ namespace Kwiatostan.Data
                 {
                     Id = 1,
                     Name = "Róża czerwona",
+                    Description = "Piękna czerwona róża, idealna na różne okazje.",
                     Price = 19.99m,
+                    StockQuantity = 112,
                     CategoryId = 1,
                     ImageFilename = "roza.jpg"
                 },
@@ -46,7 +48,9 @@ namespace Kwiatostan.Data
                 {
                     Id = 2,
                     Name = "Tulipan",
+                    Description = "Kolorowy tulipan, dodający świeżości i radości.",
                     Price = 14.99m,
+                    StockQuantity = 12,
                     CategoryId = 1,
                     ImageFilename = "tulipan.jpg"
                 },
@@ -55,13 +59,16 @@ namespace Kwiatostan.Data
                     Id = 3,
                     Name = "Fiołek doniczkowy",
                     Price = 12.50m,
+                    StockQuantity = 44,
                     CategoryId = 2
                 },
                 new Product
                 {
                     Id = 4,
                     Name = "Storczyk",
+                    Description = "Elegancki storczyk, który doda uroku każdemu pomieszczeniu.",
                     Price = 29.99m,
+                    StockQuantity = 5,
                     CategoryId = 2,
                     ImageFilename = "storczyk.jpg"
                 },
@@ -69,7 +76,9 @@ namespace Kwiatostan.Data
                 {
                     Id = 5,
                     Name = "Nawóz do roślin",
+                    Description = "Skuteczny nawóz do roślin, aby utrzymać je zdrowe i piękne.",
                     Price = 8.99m,
+                    StockQuantity = 150,
                     CategoryId = 3,
                     ImageFilename = "nawoz.jpg"
                 },
@@ -78,9 +87,10 @@ namespace Kwiatostan.Data
                     Id = 6,
                     Name = "Narzędzia ogrodnicze",
                     Price = 24.99m,
+                    StockQuantity = 15,
                     CategoryId = 3
                 }
-            );
+            ); 
         }
     }
 }

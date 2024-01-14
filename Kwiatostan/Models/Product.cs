@@ -20,6 +20,9 @@ namespace Kwiatostan.Models
         public required decimal Price { get; set; }
 
         [Required]
+        public int StockQuantity { get; set; }
+
+        [Required]
         public int CategoryId { get; set; }
         public  ProductCategory Category { get; set; } = null!;
 
