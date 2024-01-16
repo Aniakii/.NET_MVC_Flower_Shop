@@ -8,21 +8,39 @@ using Microsoft.EntityFrameworkCore;
 using Kwiatostan.Data;
 using Kwiatostan.Models;
 using Microsoft.AspNetCore.Authorization;
+using Kwiatostan.Services;
+using Microsoft.AspNetCore.Identity;
+using Kwiatostan.Helpers;
 
 namespace Kwiatostan.Controllers
 {
     public class ShopController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly ILogger<ShopController> _logger;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ShopController(ApplicationDbContext context)
+        public ShopController(ApplicationDbContext context,
+            ILogger<ShopController> logger,
+            IShoppingCartService shoppingCartService,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _logger = logger;
+            _shoppingCartService = shoppingCartService;
+            _userManager = userManager;
         }
 
         // GET: Products
         public async Task<IActionResult> Index()
         {
+            var carts = _context.ShoppingCarts.ToList();
+            foreach(var cart in carts)
+            {
+                _logger.LogCritical(cart.UserId);
+            }
+
             var applicationDbContext = _context.Products.Include(p => p.Category);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -51,6 +69,21 @@ namespace Kwiatostan.Controllers
 
             return View(product);
         }
+
+        // POST: Products/AddToCart
+        [Authorize]
+        [HttpPost]
+        public IActionResult AddToCart(int productId)
+        {
+            AlertHelper.SetAlert(this, "Dodano do koszyka", AlertType.success, 500);
+
+            var userId = _userManager.GetUserId(User) ?? throw new AccessViolationException("Only logged users can add items");
+
+            _shoppingCartService.AddProductToCart(userId, productId);
+
+            return RedirectToAction(nameof(Details), new {id = productId});
+        }
+
 
         private static (string Message, string AlertType) GetStockQuantityInfo(int stockQuantity)
         {

@@ -1,5 +1,7 @@
 using Kwiatostan.Controllers;
 using Kwiatostan.Data;
+using Kwiatostan.Helpers;
+using Kwiatostan.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,12 +13,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddScoped<IShoppingCartService, DefaultShoppingCartService>();
+
+
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -24,8 +28,6 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
 else
 {

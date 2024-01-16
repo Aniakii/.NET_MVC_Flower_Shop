@@ -68,7 +68,7 @@ namespace Kwiatostan.Data
                     Name = "Storczyk",
                     Description = "Elegancki storczyk, który doda uroku każdemu pomieszczeniu.",
                     Price = 29.99m,
-                    StockQuantity = 5,
+                    StockQuantity = 0,
                     CategoryId = 2,
                     ImageFilename = "storczyk.jpg"
                 },

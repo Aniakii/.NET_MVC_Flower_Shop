@@ -1,4 +1,7 @@
-﻿@model Kwiatostan.Models.Product
+﻿@using Microsoft.AspNetCore.Identity
+@model Kwiatostan.Models.Product
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Szczegóły";
@@ -26,16 +29,39 @@
                     <span>@Model.Price</span>
                 </div>
                 <p class="lead">@Model.Description</p>
-                <div class="d-flex">
-                    <button class="btn btn-primary flex-shrink-0" type="button">
-                        <i class="bi-cart-fill me-1"></i>
-                        Dodaj do koszyka
-                    </button>
-                </div>
-                <div class="alert mt-2 @ViewBag.StockQuantityAlertType" role="alert">
-                    <strong> @ViewBag.StockQuantityMessage </strong> (@Model.StockQuantity)
-                </div>
+
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    @if (Model.StockQuantity != 0)
+                    {
+                        <form method="post" asp-action="AddToCart" asp-route-productId="@Model.Id">
+                            <button type="submit" class="btn btn-primary flex-shrink-0">
+                                <i class="bi-cart-fill me-1">Dodaj do koszyka</i>
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-secondary flex-shrink-0 disabled">
+                            <i class="bi-cart-fill me-1">Dodaj do koszyka</i>
+                        </a>
+                    }
+                    <div class="alert mt-2 @ViewBag.StockQuantityAlertType" role="alert">
+                        <strong> @ViewBag.StockQuantityMessage </strong> (@Model.StockQuantity)
+                    </div>
+                }
+                else
+                {
+                    <a class="btn btn-outline-secondary flex-shrink-0 disabled">
+                        <i class="bi-cart-fill me-1">Dodaj do koszyka</i>
+                    </a>
+                    <div class="alert mt-2 alert-warning" role="alert">
+                        <strong>Zaloguj się żeby dodać do koszyka</strong>
+                    </div>
+                }
+
             </div>
+
         </div>
     </div>
 </section>

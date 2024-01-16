@@ -8,16 +8,16 @@ namespace Kwiatostan.Models
         public int Id { get; set; }
 
         [Required]
-        public int ShoppingCartId { get; set; }
-        public required ShoppingCart ShoppingCart { get; set; }
+        public required int ShoppingCartId { get; set; }
+        public ShoppingCart ShoppingCart { get; set; } = null!;
 
 
         [Required]
-        public int ProductId { get; set; }
-        public required Product Product { get; set; }
+        public required int ProductId { get; set; }
+        public Product Product { get; set; } = null!;
 
         [Required]
-        public int Quantity {  get; set; }
+        public required int Quantity {  get; set; }
 
         public decimal CalculateTotal()
         {
