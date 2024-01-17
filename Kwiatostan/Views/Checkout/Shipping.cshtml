@@ -5,51 +5,91 @@
 }
 
 
-<h2 class="mb-4">Wybierz sposób dostawy</h2>
+<h1 class="mb-4">Wybierz sposób dostawy</h1>
 
-<div class="row p-5">
+
+<div class="fs-4">
+    <label>
+        <input type="radio" name="deliveryOption" value="kurier" checked> Dostawa kurierem*
+    </label>
+</div>
+<div class="fs-4">
+    <label>
+        <input type="radio" name="deliveryOption" value="odbior"> Odbiór osobisty
+    </label>
+</div>
+
+<div class="ml-2 row p-5" id="formDiv">
     <div style="background-color: #e0e0e0; border:3px solid black" class="p-3 col-md-4">
         <h3>Podaj adres</h3>
-        <form asp-action="Shipping">
+        <form id="addressForm" asp-action="Shipping">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Ulica" class="control-label"></label>
-                <input asp-for="Ulica" class="form-control" />
-                <span asp-validation-for="Ulica" class="text-danger"></span>
+                <label asp-for="Street" class="control-label"></label>
+                <input asp-for="Street" class="form-control" />
+                <span asp-validation-for="Street" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NumerBudynku" class="control-label"></label>
-                <input asp-for="NumerBudynku" class="form-control" />
-                <span asp-validation-for="NumerBudynku" class="text-danger"></span>
+                <label asp-for="BuildingNumber" class="control-label"></label>
+                <input asp-for="BuildingNumber" class="form-control" />
+                <span asp-validation-for="BuildingNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NumerMieszkania" class="control-label"></label>
-                <input asp-for="NumerMieszkania" class="form-control" />
-                <span asp-validation-for="NumerMieszkania" class="text-danger"></span>
+                <label asp-for="ApartmentNumber" class="control-label"></label>
+                <input asp-for="ApartmentNumber" class="form-control" />
+                <span asp-validation-for="ApartmentNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Miasto" class="control-label"></label>
-                <input asp-for="Miasto" class="form-control" />
-                <span asp-validation-for="Miasto" class="text-danger"></span>
+                <label asp-for="City" class="control-label"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="KodPocztowy" class="control-label"></label>
-                <input asp-for="KodPocztowy" class="form-control" />
-                <span asp-validation-for="KodPocztowy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label asp-for="PostalCode" class="control-label"></label>
+                <input asp-for="PostalCode" class="form-control" />
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
             </div>
         </form>
     </div>
+    <div class="form-group text-right">
+        <input type="submit" form="addressForm" value="Kontynuuj" class="btn btn-primary mt-4" />
+    </div>
+</div>
+
+<div id="continueButtonDiv" style="display: none;" class="form-group text-right">
+    <button id="continueButton" value="Kontynuuj" class="btn btn-primary mt-4" > >Kontynuuj</button>
+</div>
+
+<div id="shippingPriceInfo">
+    <p class="f-4">*Koszt dostawy kurierem to 11zł</p>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="ShoppingCart" asp-action="Index">Powrót do koszyka</a>
 </div>
+
+
+<script>
+    document.querySelectorAll('input[name="deliveryOption"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            const formDiv = document.getElementById("formDiv");
+            if(this.value == "odbior")
+            {
+                formDiv.style.display = "none";
+                continueButtonDiv.style.display = "block";
+                shippingPriceInfo.style.display = "none"
+            }
+            else{
+                formDiv.style.display = "block";
+                continueButtonDiv.style.display = "none";
+                shippingPriceInfo.style.display = "block"
+            }
+        });
+    });
+</script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
 

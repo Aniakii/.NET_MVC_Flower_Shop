@@ -22,11 +22,6 @@ namespace Kwiatostan.Controllers
 
         public IActionResult Index()
         {
-            foreach(var product in _context.Products)
-            {
-                _logger.LogInformation(product.ImageFilename);
-            }
-
             return View();
         }
 

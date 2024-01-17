@@ -35,12 +35,6 @@ namespace Kwiatostan.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var carts = _context.ShoppingCarts.ToList();
-            foreach(var cart in carts)
-            {
-                _logger.LogCritical(cart.UserId);
-            }
-
             var applicationDbContext = _context.Products.Include(p => p.Category);
             return View(await applicationDbContext.ToListAsync());
         }
