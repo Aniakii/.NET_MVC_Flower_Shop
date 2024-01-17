@@ -6,54 +6,77 @@
 
 <h2>Zawartość koszyka</h2>
 
-<table class="table fs-4" style="border: 3px solid black; background-color:#e0e0e0">
-    <thead>
-        <tr>
-            <th>
-                Produkt
-            </th>
-            <th>
-                Cena
-            </th>
-            <th>
-                Ilość
-            </th>
-            <th>
-                Usuń
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+@if (Model.Count() != 0)
+{
+    <table class="table fs-5" style="border: 3px solid black; background-color:#e0e0e0">
+        <thead>
             <tr>
-                <td class="d-flex gap-2">
-                    @if (item.Product.ImageFilename != null)
-                    {
-                        <div class="d-flex justify-content-center align-items-center" style="width: 150px; height: 120px; overflow: hidden;">
-                            <img style="object-fit: contain; max-height: 100%;" class="card-img-top" src="~/images/@item.Product.ImageFilename" alt="Image">
+                <th>
+                    Produkt
+                </th>
+                <th>
+                    Cena
+                </th>
+                <th>
+                    Ilość
+                </th>
+                <th>
+                    Usuń
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <div class="d-flex gap-1 gap-md-5 align-items-center">
+                            @if (item.Product.ImageFilename != null)
+                            {
+                                <div class="d-flex justify-content-center align-items-center" style="width: 120px; height: 120px; overflow: hidden;">
+                                    <img style="object-fit: contain; max-height: 100%;" class="card-img-top" src="~/images/@item.Product.ImageFilename" alt="Image">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="d-flex justify-content-center align-items-center" style="width: 120px; height: 120px; overflow: hidden;">
+                                    <img style="object-fit: contain; max-height: 100%;" class="card-img-top" src="~/images/no_image.jpg" alt="No Image">
+                                </div>
+                            }
+                            @Html.DisplayFor(modelItem => item.Product.Name)
                         </div>
-                    }
-                    else
-                    {
-                        <div class="d-flex justify-content-center align-items-center" style="width: 150px; height: 120px; overflow: hidden;">
-                            <img style="object-fit: contain; max-height: 100%;" class="card-img-top" src="~/images/no_image.jpg" alt="No Image">
-                        </div>
-                    }
-                    @Html.DisplayFor(modelItem => item.Product.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Product.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Quantity)
-                </td>
-                <td>
-                    <form method="post" asp-action="DeleteProductFromCart" asp-route-productId="@item.ProductId">
-                        <button type="submit" class="fs-3 btn btn-danger">X</button>
-                    </form>
+                    </td>
+                    <td class="align-middle">
+                        @Html.DisplayFor(modelItem => item.Product.Price)
+                    </td>
+                    <td class="align-middle">
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td class="align-middle">
+                        <form method="post" asp-action="DeleteProductFromCart" asp-route-productId="@item.ProductId">
+                            <button type="submit" class="fs-3 btn btn-danger">X</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan=4 class="fs-4">Suma: @ViewBag.TotalPrice</td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <div class="px-5 d-flex flex-column flex-md-row gap-2 gap-md-5">
+                        <button class="fs-5 fw-bold btn btn-outline-secondary flex-grow-1">Powrót do sklepu</button>
+                        <button class="fs-5 fw-bold btn btn-outline-secondary flex-grow-1">Złóż zamówienie</button>
+                    </div>
                 </td>
             </tr>
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        Twój koszyk jest pusty <a asp-controller="Shop" asp-action="Index">Zrób zakupy!</a>
+    </div>
+}

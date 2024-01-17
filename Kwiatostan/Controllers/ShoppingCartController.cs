@@ -10,6 +10,7 @@ using Kwiatostan.Models;
 using Microsoft.AspNetCore.Authorization;
 using Kwiatostan.Services;
 using Microsoft.AspNetCore.Identity;
+using Kwiatostan.Helpers;
 
 namespace Kwiatostan.Controllers
 {
@@ -37,6 +38,9 @@ namespace Kwiatostan.Controllers
         {
             var userId = _userManager.GetUserId(User) ?? throw new AccessViolationException("Only logged in users can access their cart");
             var cartItems = _shoppingCartService.GetUserCartItems(userId);
+            var totalPrice = _shoppingCartService.GetOrCreateCartForUser(userId).CalculateTotal();
+
+            ViewBag.TotalPrice = totalPrice;
 
             return View(cartItems);
         }
