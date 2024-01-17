@@ -92,5 +92,6 @@ namespace Kwiatostan.Data
                 }
             ); 
         }
+        public DbSet<Kwiatostan.Models.Address> Address { get; set; } = default!;
     }
 }

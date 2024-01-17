@@ -20,5 +20,9 @@ namespace Kwiatostan.Models
         [Required]
         public int ShoppingCartId { get; set; }
         public required ShoppingCart ShoppingCart { get; set; }
+
+
+        public int? AddressId { get; set; }
+        public Address? Address { get; set; }
     }
 }

@@ -47,8 +47,6 @@ namespace Kwiatostan.Controllers
 
 
 
-
-
         [HttpPost]
         public IActionResult DeleteProductFromCart(int productId)
         {
