@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace Kwiatostan.Data.Migrations
+namespace Kwiatostan.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class updatedDataType : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

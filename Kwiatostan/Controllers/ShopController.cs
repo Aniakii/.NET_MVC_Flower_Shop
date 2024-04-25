@@ -75,7 +75,7 @@ namespace Kwiatostan.Controllers
 
             _shoppingCartService.AddProductToCart(userId, productId);
 
-            return RedirectToAction(nameof(Details), new {id = productId});
+            return RedirectToAction(nameof(Details), new { id = productId });
         }
 
 

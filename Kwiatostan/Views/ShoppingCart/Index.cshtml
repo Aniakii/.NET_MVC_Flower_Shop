@@ -6,6 +6,23 @@
 
 <h2>Zawartość koszyka</h2>
 
+<style>
+    .custom-modify-button {
+        font-size: 50px;
+        background-color: #e0e0e0;
+        border: none;
+    }
+
+    .custom-amount-text {
+        font-size: 30px;
+        display: inline;
+        padding: 2px 15px;
+        background-color: white;
+        border: 3px solid;
+        border-color: grey;
+    }
+</style>
+
 @if (Model.Count() != 0)
 {
     <table class="table fs-5" style="border: 3px solid black; background-color:#e0e0e0">
@@ -18,7 +35,7 @@
                     Cena
                 </th>
                 <th>
-                    Ilość
+                 Ilość
                 </th>
                 <th>
                     Usuń
@@ -31,10 +48,16 @@
                 <tr>
                     <td>
                         <div class="d-flex gap-1 gap-md-5 align-items-center">
-                            @if (item.Product.ImageFilename != null)
+                            @if (item.Article.ImageFilename != null)
                             {
                                 <div class="d-flex justify-content-center align-items-center" style="width: 120px; height: 120px; overflow: hidden;">
-                                    <img style="object-fit: contain; max-height: 100%;" class="card-img-top" src="~/images/@item.Product.ImageFilename" alt="Image">
+                                    <img style="object-fit: contain; max-height: 100%;" class="card-img-top" src="~/images/@item.Article.ImageFilename" alt="Image">
+                                </div>
+                            }
+                            else if(item.Article is Bouquet)
+                                    {
+                                <div class="d-flex justify-content-center align-items-center" style="width: 120px; height: 120px; overflow: hidden;">
+                                    <img style="object-fit: contain; max-height: 100%;" class="card-img-top" src="~/images/bukiet.jpg" alt="Image">
                                 </div>
                             }
                             else
@@ -43,29 +66,69 @@
                                     <img style="object-fit: contain; max-height: 100%;" class="card-img-top" src="~/images/no_image.jpg" alt="No Image">
                                 </div>
                             }
-                            @Html.DisplayFor(modelItem => item.Product.Name)
+                            @if (item.Article is Product product)
+                            {
+                                @Html.DisplayFor(modelItem => product.Name)
+                            }
+                            else
+                            {
+                                <p>Bukiet nr @item.Id</p>
+                            }
+                           
                         </div>
                     </td>
                     <td class="align-middle">
-                        @Html.DisplayFor(modelItem => item.Product.Price)
+                        @(item.Article.Price * (decimal)item.Quantity) zł
                     </td>
                     <td class="align-middle">
-                        @Html.DisplayFor(modelItem => item.Quantity)
+                        @if(item.Article is Bouquet)
+                        {
+                            <form method="post" asp-action="UpdateQuantityOfProduct" asp-route-articleId="@item.Article.Id" asp-route-quantity="decrease" asp-route-articleType="bouquet" style="display: inline;">
+                                <button type="submit" class="custom-modify-button">-</button>
+                            </form>
+                            <p class="custom-amount-text">@Html.DisplayFor(modelItem => item.Quantity)</p>
+                            
+                            <form method="post" asp-action="UpdateQuantityOfProduct" asp-route-articleId="@item.Article.Id" asp-route-quantity="increase" asp-route-articleType="bouquet" style="display: inline;">
+                                <button type="submit" class="custom-modify-button">+</button>
+                            </form>
+                        } else
+                        {
+                            <form method="post" asp-action="UpdateQuantityOfProduct" asp-route-articleId="@item.Article.Id" asp-route-quantity="decrease" asp-route-articleType="product" style="display: inline;">
+                                <button type="submit" class="custom-modify-button">-</button>
+                            </form>
+                            <p class="custom-amount-text">@Html.DisplayFor(modelItem => item.Quantity)</p>
+                            <form method="post" asp-action="UpdateQuantityOfProduct" asp-route-articleId="@item.Article.Id" asp-route-quantity="increase" asp-route-articleType="product" style="display: inline;">
+                                <button type="submit" class="custom-modify-button">+</button>
+                            </form>
+                        }
+
                     </td>
                     <td class="align-middle">
-                        <form method="post" asp-action="DeleteProductFromCart" asp-route-productId="@item.ProductId">
+                        @if (item.Article is Bouquet)
+                        {
+                            <form method="post" asp-action="DeleteProductFromCart" asp-route-articleId="@item.ArticleId" asp-route-articleType="bouquet">
+                                <button type="submit" class="fs-3 btn btn-danger">X</button>
+                            </form>
+                        } else
+                        {
+                            <form method="post" asp-action="DeleteProductFromCart" asp-route-articleId="@item.ArticleId" asp-route-articleType="product">
                             <button type="submit" class="fs-3 btn btn-danger">X</button>
                         </form>
+                        }
+                       
                     </td>
                 </tr>
             }
             <tr>
-                <td colspan=4 class="fs-4">Suma: @ViewBag.TotalPrice</td>
+                <td colspan=4 class="fs-4">Suma: @ViewBag.TotalPrice zł</td>
             </tr>
             <tr>
                 <td colspan="4">
                     <div class="px-5 d-flex flex-column flex-md-row gap-2 gap-md-5">
-                        <button class="fs-5 fw-bold btn btn-outline-secondary flex-grow-1">Powrót do sklepu</button>
+                        <form class="flex-grow-1 d-flex" asp-controller="Shop" asp-action="Index">
+                            <button class="fs-5 fw-bold btn btn-outline-secondary flex-grow-1">Powrót do sklepu</button>
+                        </form>
+                       
 
                         @Html.AntiForgeryToken()
                         <form class="flex-grow-1 d-flex"asp-controller="Checkout" asp-action="Shipping">

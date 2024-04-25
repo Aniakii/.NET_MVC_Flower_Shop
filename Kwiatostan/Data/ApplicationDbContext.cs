@@ -2,34 +2,41 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System.Reflection.Emit;
 
 namespace Kwiatostan.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        private readonly IWebHostEnvironment _webHostEnvironment;
+       private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IWebHostEnvironment webHostEnvironment)
+		
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IWebHostEnvironment webHostEnvironment)
             : base(options)
         {
             _webHostEnvironment = webHostEnvironment;
         }
 
+        public DbSet<Article> Articles { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderStatus> OrderStatuses { get; set; }
+        public DbSet<Bouquet> Bouquets { get; set; }
+		public DbSet<BouquetProduct> BouquetProducts { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+		protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<Article>().UseTptMappingStrategy();
 
             builder.Entity<ProductCategory>().HasData(
                 new ProductCategory { Id = 1, Name = "Kwiaty cięte" },
                 new ProductCategory { Id = 2, Name = "Kwiaty doniczkowe" },
-                new ProductCategory { Id = 3, Name = "Akcesoria ogrodnicze" }
+                new ProductCategory { Id = 3, Name = "Akcesoria ogrodnicze" },
+                new ProductCategory { Id = 4, Name = "Ozdoby" }
             );
 
 
@@ -89,8 +96,88 @@ namespace Kwiatostan.Data
                     Price = 24.99m,
                     StockQuantity = 15,
                     CategoryId = 3
-                }
-            ); 
+                },
+                new Product
+                {
+                    Id = 7,
+                    Name = "Różowa Wstążka",
+                    Description = "Urocza wstążka, idealna do ozdobienia bukietu.",
+                    Price = 4.99m,
+                    StockQuantity = 10,
+                    CategoryId = 4,
+                    ImageFilename = "wstazka.jpg"
+                },
+                new Product
+                {
+                    Id = 8,
+                    Name = "Papier ozdobny",
+                    Description = "Klasyczny papier, idealny do ozdobienia bukietu.",
+                    Price = 1.99m,
+                    StockQuantity = 20,
+                    CategoryId = 4,
+                    ImageFilename = "papier.jpg"
+                },
+                new Product
+                {
+                    Id = 9,
+                    Name = "Goździk czerwony",
+                    Description = "Czerwony goździk, dodający świeżości i radości.",
+                    Price = 9.99m,
+                    StockQuantity = 25,
+                    CategoryId = 1,
+                    ImageFilename = "gozdzik_czerwony.jpg"
+                },
+                 new Product
+                 {
+                     Id = 10,
+                     Name = "Goździk różowy",
+                     Description = "Różowy goździk, dodający świeżości i radości.",
+                     Price = 9.99m,
+                     StockQuantity = 25,
+                     CategoryId = 1,
+                     ImageFilename = "gozdzik_rozowy.jpg"
+                 },
+                  new Product
+                  {
+                      Id = 11,
+                      Name = "Lilia",
+                      Description = "Dostojny, elegancki kwiat.",
+                      Price = 15.99m,
+                      StockQuantity = 5,
+                      CategoryId = 1,
+                      ImageFilename = "lilia.jpg"
+                  },
+                   new Product
+                   {
+                       Id = 12,
+                       Name = "Margaretka",
+                       Description = "Urocza margaretka, dodająca radości.",
+                       Price = 5.99m,
+                       StockQuantity = 30,
+                       CategoryId = 1,
+                       ImageFilename = "margaretka.jpg"
+                   },
+                   new Product
+                   {
+                       Id = 13,
+                       Name = "Słonecznik",
+                       Description = "Urocza margaretka, dodająca radości.",
+                       Price = 6.99m,
+                       StockQuantity = 30,
+                       CategoryId = 1,
+                       ImageFilename = "slonecznik.jpg"
+                   },
+                   new Product
+                   {
+                       Id = 14,
+                       Name = "Ozdobne zielone gałązki",
+                       Description = "Zielone gałązki, idealnie otulają splecione w bukiet kwiaty.",
+                       Price = 3.99m,
+                       StockQuantity = 20,
+                       CategoryId = 4,
+                       ImageFilename = "galazki.jpg"
+                   }
+            );
         }
         public DbSet<Kwiatostan.Models.Address> Address { get; set; } = default!;
     }

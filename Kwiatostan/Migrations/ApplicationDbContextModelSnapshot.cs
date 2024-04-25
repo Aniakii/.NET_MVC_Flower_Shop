@@ -4,26 +4,102 @@ using Kwiatostan.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Kwiatostan.Data.Migrations
+namespace Kwiatostan.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240113161717_AddDescription")]
-    partial class AddDescription
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Kwiatostan.Models.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ApartmentNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BuildingNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Address");
+                });
+
+            modelBuilder.Entity("Kwiatostan.Models.Article", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImageFilename")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Articles");
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("Kwiatostan.Models.BouquetProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BouquetId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BouquetProducts");
+                });
 
             modelBuilder.Entity("Kwiatostan.Models.CartItem", b =>
                 {
@@ -33,7 +109,10 @@ namespace Kwiatostan.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ArticleId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -43,6 +122,8 @@ namespace Kwiatostan.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
 
                     b.HasIndex("ProductId");
 
@@ -59,6 +140,9 @@ namespace Kwiatostan.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -73,6 +157,8 @@ namespace Kwiatostan.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("OrderStatusId");
 
@@ -99,34 +185,6 @@ namespace Kwiatostan.Data.Migrations
                     b.ToTable("OrderStatuses");
                 });
 
-            modelBuilder.Entity("Kwiatostan.Models.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("Products");
-                });
-
             modelBuilder.Entity("Kwiatostan.Models.ProductCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -143,6 +201,28 @@ namespace Kwiatostan.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Kwiaty cięte"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Kwiaty doniczkowe"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Akcesoria ogrodnicze"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Ozdoby"
+                        });
                 });
 
             modelBuilder.Entity("Kwiatostan.Models.ShoppingCart", b =>
@@ -364,13 +444,191 @@ namespace Kwiatostan.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Kwiatostan.Models.Bouquet", b =>
+                {
+                    b.HasBaseType("Kwiatostan.Models.Article");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("Bouquets");
+                });
+
+            modelBuilder.Entity("Kwiatostan.Models.Product", b =>
+                {
+                    b.HasBaseType("Kwiatostan.Models.Article");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("int");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ImageFilename = "roza.jpg",
+                            Price = 19.99m,
+                            CategoryId = 1,
+                            Description = "Piękna czerwona róża, idealna na różne okazje.",
+                            Name = "Róża czerwona",
+                            StockQuantity = 112
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ImageFilename = "tulipan.jpg",
+                            Price = 14.99m,
+                            CategoryId = 1,
+                            Description = "Kolorowy tulipan, dodający świeżości i radości.",
+                            Name = "Tulipan",
+                            StockQuantity = 12
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Price = 12.50m,
+                            CategoryId = 2,
+                            Name = "Fiołek doniczkowy",
+                            StockQuantity = 44
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ImageFilename = "storczyk.jpg",
+                            Price = 29.99m,
+                            CategoryId = 2,
+                            Description = "Elegancki storczyk, który doda uroku każdemu pomieszczeniu.",
+                            Name = "Storczyk",
+                            StockQuantity = 0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ImageFilename = "nawoz.jpg",
+                            Price = 8.99m,
+                            CategoryId = 3,
+                            Description = "Skuteczny nawóz do roślin, aby utrzymać je zdrowe i piękne.",
+                            Name = "Nawóz do roślin",
+                            StockQuantity = 150
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Price = 24.99m,
+                            CategoryId = 3,
+                            Name = "Narzędzia ogrodnicze",
+                            StockQuantity = 15
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ImageFilename = "wstazka.jpg",
+                            Price = 4.99m,
+                            CategoryId = 4,
+                            Description = "Urocza wstążka, idealna do ozdobienia bukietu.",
+                            Name = "Różowa Wstążka",
+                            StockQuantity = 10
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ImageFilename = "papier.jpg",
+                            Price = 1.99m,
+                            CategoryId = 4,
+                            Description = "Klasyczny papier, idealny do ozdobienia bukietu.",
+                            Name = "Papier ozdobny",
+                            StockQuantity = 20
+                        },
+                        new
+                        {
+                            Id = 9,
+                            ImageFilename = "gozdzik_czerwony.jpg",
+                            Price = 9.99m,
+                            CategoryId = 1,
+                            Description = "Czerwony goździk, dodający świeżości i radości.",
+                            Name = "Goździk czerwony",
+                            StockQuantity = 25
+                        },
+                        new
+                        {
+                            Id = 10,
+                            ImageFilename = "gozdzik_rozowy.jpg",
+                            Price = 9.99m,
+                            CategoryId = 1,
+                            Description = "Różowy goździk, dodający świeżości i radości.",
+                            Name = "Goździk różowy",
+                            StockQuantity = 25
+                        },
+                        new
+                        {
+                            Id = 11,
+                            ImageFilename = "lilia.jpg",
+                            Price = 15.99m,
+                            CategoryId = 1,
+                            Description = "Dostojny, elegancki kwiat.",
+                            Name = "Lilia",
+                            StockQuantity = 5
+                        },
+                        new
+                        {
+                            Id = 12,
+                            ImageFilename = "margaretka.jpg",
+                            Price = 5.99m,
+                            CategoryId = 1,
+                            Description = "Urocza margaretka, dodająca radości.",
+                            Name = "Margaretka",
+                            StockQuantity = 30
+                        },
+                        new
+                        {
+                            Id = 13,
+                            ImageFilename = "slonecznik.jpg",
+                            Price = 6.99m,
+                            CategoryId = 1,
+                            Description = "Urocza margaretka, dodająca radości.",
+                            Name = "Słonecznik",
+                            StockQuantity = 30
+                        },
+                        new
+                        {
+                            Id = 14,
+                            ImageFilename = "galazki.jpg",
+                            Price = 3.99m,
+                            CategoryId = 4,
+                            Description = "Zielone gałązki, idealnie otulają splecione w bukiet kwiaty.",
+                            Name = "Ozdobne zielone gałązki",
+                            StockQuantity = 20
+                        });
+                });
+
             modelBuilder.Entity("Kwiatostan.Models.CartItem", b =>
                 {
-                    b.HasOne("Kwiatostan.Models.Product", "Product")
-                        .WithMany("CartItems")
-                        .HasForeignKey("ProductId")
+                    b.HasOne("Kwiatostan.Models.Article", "Article")
+                        .WithMany()
+                        .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Kwiatostan.Models.Product", null)
+                        .WithMany("CartItems")
+                        .HasForeignKey("ProductId");
 
                     b.HasOne("Kwiatostan.Models.ShoppingCart", "ShoppingCart")
                         .WithMany("CartItems")
@@ -378,13 +636,17 @@ namespace Kwiatostan.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
+                    b.Navigation("Article");
 
                     b.Navigation("ShoppingCart");
                 });
 
             modelBuilder.Entity("Kwiatostan.Models.Order", b =>
                 {
+                    b.HasOne("Kwiatostan.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
                     b.HasOne("Kwiatostan.Models.OrderStatus", "OrderStatus")
                         .WithMany()
                         .HasForeignKey("OrderStatusId")
@@ -397,20 +659,11 @@ namespace Kwiatostan.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Address");
+
                     b.Navigation("OrderStatus");
 
                     b.Navigation("ShoppingCart");
-                });
-
-            modelBuilder.Entity("Kwiatostan.Models.Product", b =>
-                {
-                    b.HasOne("Kwiatostan.Models.ProductCategory", "Category")
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -464,9 +717,30 @@ namespace Kwiatostan.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Kwiatostan.Models.Bouquet", b =>
+                {
+                    b.HasOne("Kwiatostan.Models.Article", null)
+                        .WithOne()
+                        .HasForeignKey("Kwiatostan.Models.Bouquet", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Kwiatostan.Models.Product", b =>
                 {
-                    b.Navigation("CartItems");
+                    b.HasOne("Kwiatostan.Models.ProductCategory", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Kwiatostan.Models.Article", null)
+                        .WithOne()
+                        .HasForeignKey("Kwiatostan.Models.Product", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Kwiatostan.Models.ProductCategory", b =>
@@ -475,6 +749,11 @@ namespace Kwiatostan.Data.Migrations
                 });
 
             modelBuilder.Entity("Kwiatostan.Models.ShoppingCart", b =>
+                {
+                    b.Navigation("CartItems");
+                });
+
+            modelBuilder.Entity("Kwiatostan.Models.Product", b =>
                 {
                     b.Navigation("CartItems");
                 });

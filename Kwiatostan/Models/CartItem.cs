@@ -13,15 +13,15 @@ namespace Kwiatostan.Models
 
 
         [Required]
-        public required int ProductId { get; set; }
-        public Product Product { get; set; } = null!;
+        public required int ArticleId { get; set; }
+        public Article Article { get; set; } = null!;
 
         [Required]
-        public required int Quantity {  get; set; }
+        public required int Quantity { get; set; }
 
         public decimal CalculateTotal()
         {
-            return Product.Price * Quantity;
+            return Article.Price * Quantity;
         }
     }
 }

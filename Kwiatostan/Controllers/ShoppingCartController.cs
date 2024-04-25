@@ -14,11 +14,11 @@ using Kwiatostan.Helpers;
 
 namespace Kwiatostan.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     public class ShoppingCartController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IShoppingCartService _shoppingCartService;
+        private readonly ApplicationDbContext? _context;
+		private readonly IShoppingCartService _shoppingCartService;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<ShoppingCartController> _logger;
 
@@ -33,10 +33,12 @@ namespace Kwiatostan.Controllers
             _logger = logger;
         }
 
+
         // GET: ShoppingCart
         public  IActionResult Index()
         {
             var userId = _userManager.GetUserId(User) ?? throw new AccessViolationException("Only logged in users can access their cart");
+            
             var cartItems = _shoppingCartService.GetUserCartItems(userId);
             var totalPrice = _shoppingCartService.GetOrCreateCartForUser(userId).CalculateTotal();
 
@@ -48,11 +50,29 @@ namespace Kwiatostan.Controllers
 
 
         [HttpPost]
-        public IActionResult DeleteProductFromCart(int productId)
+        public IActionResult DeleteProductFromCart(int articleId, string articleType)
         {
             var userId = _userManager.GetUserId(User) ?? throw new AccessViolationException("Only logged in users can access their cart");
-            _shoppingCartService.RemoveProductFromCart(userId, productId);
+            if (articleType == "product")
+            {
+                _shoppingCartService.RemoveProductFromCart(userId, articleId);
+            } else
+            {
+                _shoppingCartService.RemoveBouquetFromCart(userId, articleId);
+            }
 
+            AlertHelper.SetAlert(this, "Produkt został usunięty z koszyka", AlertType.warning, 500);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public IActionResult UpdateQuantityOfProduct(int articleId, string quantity, string articleType)
+        {
+            var userId = _userManager.GetUserId(User) ?? throw new AccessViolationException("Only logged in users can access their cart");
+            
+                _shoppingCartService.UpdateQuantity(userId, articleId, quantity, articleType);
+            AlertHelper.SetAlert(this, "Ilość produktu w koszyku została zaaktualizowana", AlertType.success, 500);
             return RedirectToAction(nameof(Index));
         }
 

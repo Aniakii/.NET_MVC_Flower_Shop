@@ -9,7 +9,7 @@ namespace Kwiatostan.Models
         [Required]
         public required string UserId { get; set; }
 
-        public  ICollection<CartItem> CartItems { get; set; } = null!;
+        public ICollection<CartItem> CartItems { get; set; } = null!;
 
         public decimal CalculateTotal()
         {

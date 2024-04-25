@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace Kwiatostan.Data.Migrations
+namespace Kwiatostan.Migrations
 {
     /// <inheritdoc />
-    public partial class NewDataSeeded : Migration
+    public partial class FewFixes : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -13,9 +13,9 @@ namespace Kwiatostan.Data.Migrations
             migrationBuilder.UpdateData(
                 table: "Products",
                 keyColumn: "Id",
-                keyValue: 4,
-                column: "StockQuantity",
-                value: 0);
+                keyValue: 7,
+                column: "Name",
+                value: "Różowa Wstążka");
         }
 
         /// <inheritdoc />
@@ -24,9 +24,9 @@ namespace Kwiatostan.Data.Migrations
             migrationBuilder.UpdateData(
                 table: "Products",
                 keyColumn: "Id",
-                keyValue: 4,
-                column: "StockQuantity",
-                value: 5);
+                keyValue: 7,
+                column: "Name",
+                value: "=Różowa Wstążka");
         }
     }
 }

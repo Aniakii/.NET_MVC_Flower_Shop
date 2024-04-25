@@ -1,0 +1,282 @@
+﻿@model Kwiatostan.Models.Bouquet
+@{
+	ViewBag.Title = "Kreator Bukietów";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+	.custom-delete-button {
+		font-size: 20px;
+		background-color: red;
+		color: white;
+		border-color: red;
+		box-shadow: none;
+	}
+
+	.custom-modify-button {
+		font-size: 40px;
+		background-color: white;
+		border: none;
+	}
+
+	.custom-amount-text {
+		font-size: 20px;
+		display: inline;
+		padding: 2px 10px;
+		border: 3px solid;
+		border-color: grey;
+	}
+
+</style>
+
+<div class="container">
+	<h1 class="text-center">Kreator bukietów</h1>
+
+	<div class="row mt-4">
+		<div class="col-md-6">
+			<div class="card">
+				<div class="card-header">1. Wybierz jakie kwiaty chcesz mieć w swoim bukiecie:</div>
+				<div class="card-body">
+					<div class="row">
+						@foreach (var flower in ViewBag.AvaibleFlowers)
+						{
+							<div class="col-3 mb-3 d-flex flex-column align-items-center">
+								<form method="post" asp-action="AddToBouquet" asp-route-productId="@flower.Id">
+									<button type="submit">
+										@if (flower.ImageFilename != null)
+										{
+											<img style="max-width: 100px; max-height: 100px;" src="~/images/@flower.ImageFilename" alt="Image">
+										}
+										else
+										{
+											<img style="max-width: 100px; max-height: 100px;" src="~/images/no_image.jpg" alt="..." />
+										}
+									</button>
+								</form>
+								<p class="text-center">@flower.Name</p>
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="col-md-6">
+			<div class="card">
+				<div class="card-header">2. Wybierz jakie dodatki chcesz mieć w swoim bukiecie:</div>
+				<div class="card-body">
+					<div class="row">
+						@foreach (var accessory in ViewBag.AvaibleAccesories)
+						{
+							<div class="col-3 mb-3 d-flex flex-column align-items-center">
+								<form method="post" asp-action="AddToBouquet" asp-route-productId="@accessory.Id">
+									<button type="submit">
+										@if (accessory.ImageFilename != null)
+										{
+											<img style="max-width: 100px; max-height: 100px;" src="~/images/@accessory.ImageFilename" alt="Image">
+										}
+										else
+										{
+											<img style="max-width: 100px; max-height: 100px;" src="~/images/no_image.jpg" alt="..." />
+										}
+									</button>
+								</form>
+								<p class="text-center">@accessory.Name</p>
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="row mt-4">
+		<div class="col-md-6">
+			<div class="card">
+				<div class="card-header">Wybrane kwiaty:</div>
+				<div class="card-body">
+					<ul class="list-group">
+						@foreach (var chosenFlower in ViewBag.ChosenFlowers)
+						{
+							<li class="list-group-item">
+								<div class="row justify-content-center align-items-center">
+									<div class="col-md-7">
+										@if (chosenFlower.Key.ImageFilename != null)
+										{
+											<img style="border: 2px solid grey; max-width: 50px; max-height: 50px;" class="card-img-top mb-5 mb-md-0" src="~/images/@chosenFlower.Key.ImageFilename" alt="Image">
+										}
+										else
+										{
+											<img style="border: 2px solid grey; max-width: 50px; max-height: 50px; " class="card-img-top mb-5 mb-md-0" src="~/images/no_image.jpg" alt="..." />
+										}
+										<span>@chosenFlower.Key.Name</span>
+									</div>
+									<div class="col-md-5">
+										<form method="post" asp-action="UpdateBouquet" asp-route-productId="@chosenFlower.Key.Id" asp-route-quantity="decrease" style="display: inline;">
+											<button type="submit" class="custom-modify-button">-</button>
+										</form>
+										<p class="custom-amount-text">@chosenFlower.Value</p>
+										<form method="post" asp-action="UpdateBouquet" asp-route-productId="@chosenFlower.Key.Id" asp-route-quantity="increase" style="display: inline;">
+											<button type="submit" class="custom-modify-button">+</button>
+										</form>
+										<form method="post" asp-action="DeleteProduct" asp-route-productId="@chosenFlower.Key.Id" style="display: inline;">
+											<button type="submit" class="custom-delete-button">X</button>
+										</form>
+									</div>
+								</div>
+							</li>
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<div class="card">
+				<div class="card-header">Wybrane dodatki:</div>
+				<div class="card-body">
+					<ul class="list-group">
+						@foreach (var chosenAccessory in ViewBag.ChosenAccesories)
+						{
+							<li class="list-group-item">
+								<div class="row justify-content-center align-items-center">
+									<div class="col-md-7">
+										@if (chosenAccessory.Key.ImageFilename != null)
+										{
+											<img style="border: 2px solid grey; max-width: 50px; max-height: 50px;" class="card-img-top mb-5 mb-md-0" src="~/images/@chosenAccessory.Key.ImageFilename" alt="Image">
+										}
+										else
+										{
+											<img style="border: 2px solid grey; max-width: 50px; max-height: 50px; " class="card-img-top mb-5 mb-md-0" src="~/images/no_image.jpg" alt="..." />
+										}
+										<span>@chosenAccessory.Key.Name</span>
+									</div>
+									<div class="col-md-5">
+										<form method="post" asp-action="UpdateBouquet" asp-route-productId="@chosenAccessory.Key.Id" asp-route-quantity="decrease" style="display: inline;">
+											<button type="submit" class="custom-modify-button">-</button>
+										</form>
+										<p class="custom-amount-text">@chosenAccessory.Value</p>
+										<form method="post" asp-action="UpdateBouquet" asp-route-productId="@chosenAccessory.Key.Id" asp-route-quantity="increase" style="display: inline;">
+											<button type="submit" class="custom-modify-button">+</button>
+										</form>
+										<form method="post" asp-action="DeleteProduct" asp-route-productId="@chosenAccessory.Key.Id" style="display: inline;">
+											<button type="submit" class="custom-delete-button">X</button>
+										</form>
+									</div>
+								</div>
+							</li>
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+<div class="row mt-4">
+	<div class="col-md-12 text-center">
+		<button class="nav-link text-dark btn btn-outline-secondary" onclick="createAndSaveBouquet()">Utwórz bukiet</button>
+	</div>
+</div>
+</div>
+
+@section Scripts {
+	<script>
+		function createAndSaveBouquet() {
+
+			var totalPrice = 0;
+			var allFlowersAmount = 0;
+			var prices = "";
+			@foreach (var flower in ViewBag.ChosenFlowers) {
+			@:allFlowersAmount += @flower.Value;
+			@:totalPrice += @flower.Value * @flower.Key.Price;
+
+			}
+		
+			
+
+			var allAccessoriesAmount = 0;
+			@foreach (var accessory in ViewBag.ChosenAccesories)
+			{
+				@:allAccessoriesAmount += @accessory.Value;
+
+			@:totalPrice += @accessory.Value * @accessory.Key.Price;
+			}
+
+			var message = "";
+
+            if (allFlowersAmount > 500) {
+                message += "Zbyt duża liczba kwiatów\n";
+            }
+
+            if (allAccessoriesAmount > 30) {
+                message += "Zbyt duża liczba wszystkich dodatków\n";
+            }
+
+			if(allFlowersAmount < 2) {
+				message += "Zbyt mała ilość kwiatów w bukiecie\n";
+			}
+
+            if (message != "") {
+				var dialog = document.getElementById('errorDialog');
+				var buttonClose = document.getElementById('buttonClose');
+
+				document.getElementById('customParagraph').innerText = message;
+				buttonClose.addEventListener('click', function () {
+					dialog.close()
+				});
+
+
+				dialog.showModal();
+                
+            } else {
+				var dialog = document.getElementById('successDialog');
+				//document.getElementById('priceParagraph').innerText = "Jego cena to:		" + totalPrice.toString() + " zł";
+
+				var buttonCancel = document.getElementById('buttonCancel');
+
+				buttonCancel.addEventListener('click', function () {
+					dialog.close()
+				});
+
+				dialog.showModal();
+                
+            }
+
+		}
+
+
+	
+	</script>
+
+}
+
+
+<dialog id="errorDialog" style="width: 400px; height: 200px; background-color: #e0e0e0;">
+	<button id="buttonClose" style="position: absolute; top: 10px; right:10px; background-color: #e0e0e0;">X</button>
+	<p></p>
+	<p style="position: center; font-size: 20px">Nie udało się utworzyć bukietu!</p>
+	<p>Przyczyna:</p>
+	<p id="customParagraph">Tekst domyślny.</p>
+</dialog>
+
+<dialog id="successDialog" style="width: 450px; height: 160px;">
+	<p style="position: center; font-size: 20px">Bukiet utworzony pomyślnie!</p>
+	@* <p id="priceParagraph">Jego cena to:</p> *@
+	<p>Wybierz co chcesz teraz zrobić:</p>
+	<button id="buttonCancel">Anuluj</button>
+	<form method="post" asp-action="SaveBouquet" style="display: inline;">
+		<button type="submit">Zapisz bukiet</button>
+	</form>
+	<form method="post" asp-action="AddBouquetToCart" style="display: inline;">
+		<button type="submit">Zapisz i dodaj do koszyka</button>
+	</form>
+</dialog>
+
+
+

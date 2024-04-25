@@ -9,21 +9,100 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Kwiatostan.Data.Migrations
+namespace Kwiatostan.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240114100809_YetAnotherPathFix")]
-    partial class YetAnotherPathFix
+    [Migration("20240122142817_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Kwiatostan.Models.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ApartmentNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BuildingNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Address");
+                });
+
+            modelBuilder.Entity("Kwiatostan.Models.Article", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImageFilename")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Articles");
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("Kwiatostan.Models.BouquetProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BouquetId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BouquetProducts");
+                });
 
             modelBuilder.Entity("Kwiatostan.Models.CartItem", b =>
                 {
@@ -33,7 +112,10 @@ namespace Kwiatostan.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ArticleId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -43,6 +125,8 @@ namespace Kwiatostan.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
 
                     b.HasIndex("ProductId");
 
@@ -59,6 +143,9 @@ namespace Kwiatostan.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -73,6 +160,8 @@ namespace Kwiatostan.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("OrderStatusId");
 
@@ -97,85 +186,6 @@ namespace Kwiatostan.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OrderStatuses");
-                });
-
-            modelBuilder.Entity("Kwiatostan.Models.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CategoryId = 1,
-                            ImagePath = "C:\\Users\\tomek\\repos\\dotnet-mvc-flower-shop\\Kwiatostan\\wwwroot\\images\\roza.jpg",
-                            Name = "Róża czerwona",
-                            Price = 19.99m
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CategoryId = 1,
-                            ImagePath = "C:\\Users\\tomek\\repos\\dotnet-mvc-flower-shop\\Kwiatostan\\wwwroot\\images\\tulipan.jpg",
-                            Name = "Tulipan",
-                            Price = 14.99m
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CategoryId = 2,
-                            Name = "Fiołek doniczkowy",
-                            Price = 12.50m
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CategoryId = 2,
-                            ImagePath = "C:\\Users\\tomek\\repos\\dotnet-mvc-flower-shop\\Kwiatostan\\wwwroot\\images\\storczyk.jpg",
-                            Name = "Storczyk",
-                            Price = 29.99m
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CategoryId = 3,
-                            ImagePath = "C:\\Users\\tomek\\repos\\dotnet-mvc-flower-shop\\Kwiatostan\\wwwroot\\images\\nawoz.jpg",
-                            Name = "Nawóz do roślin",
-                            Price = 8.99m
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CategoryId = 3,
-                            Name = "Narzędzia ogrodnicze",
-                            Price = 24.99m
-                        });
                 });
 
             modelBuilder.Entity("Kwiatostan.Models.ProductCategory", b =>
@@ -210,6 +220,11 @@ namespace Kwiatostan.Data.Migrations
                         {
                             Id = 3,
                             Name = "Akcesoria ogrodnicze"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Ozdoby"
                         });
                 });
 
@@ -432,13 +447,53 @@ namespace Kwiatostan.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Kwiatostan.Models.Bouquet", b =>
+                {
+                    b.HasBaseType("Kwiatostan.Models.Article");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("Bouquets");
+                });
+
+            modelBuilder.Entity("Kwiatostan.Models.Product", b =>
+                {
+                    b.HasBaseType("Kwiatostan.Models.Article");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("int");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Products");
+                });
+
             modelBuilder.Entity("Kwiatostan.Models.CartItem", b =>
                 {
-                    b.HasOne("Kwiatostan.Models.Product", "Product")
-                        .WithMany("CartItems")
-                        .HasForeignKey("ProductId")
+                    b.HasOne("Kwiatostan.Models.Article", "Article")
+                        .WithMany()
+                        .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Kwiatostan.Models.Product", null)
+                        .WithMany("CartItems")
+                        .HasForeignKey("ProductId");
 
                     b.HasOne("Kwiatostan.Models.ShoppingCart", "ShoppingCart")
                         .WithMany("CartItems")
@@ -446,13 +501,17 @@ namespace Kwiatostan.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
+                    b.Navigation("Article");
 
                     b.Navigation("ShoppingCart");
                 });
 
             modelBuilder.Entity("Kwiatostan.Models.Order", b =>
                 {
+                    b.HasOne("Kwiatostan.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
                     b.HasOne("Kwiatostan.Models.OrderStatus", "OrderStatus")
                         .WithMany()
                         .HasForeignKey("OrderStatusId")
@@ -465,20 +524,11 @@ namespace Kwiatostan.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Address");
+
                     b.Navigation("OrderStatus");
 
                     b.Navigation("ShoppingCart");
-                });
-
-            modelBuilder.Entity("Kwiatostan.Models.Product", b =>
-                {
-                    b.HasOne("Kwiatostan.Models.ProductCategory", "Category")
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -532,9 +582,30 @@ namespace Kwiatostan.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Kwiatostan.Models.Bouquet", b =>
+                {
+                    b.HasOne("Kwiatostan.Models.Article", null)
+                        .WithOne()
+                        .HasForeignKey("Kwiatostan.Models.Bouquet", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Kwiatostan.Models.Product", b =>
                 {
-                    b.Navigation("CartItems");
+                    b.HasOne("Kwiatostan.Models.ProductCategory", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Kwiatostan.Models.Article", null)
+                        .WithOne()
+                        .HasForeignKey("Kwiatostan.Models.Product", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Kwiatostan.Models.ProductCategory", b =>
@@ -543,6 +614,11 @@ namespace Kwiatostan.Data.Migrations
                 });
 
             modelBuilder.Entity("Kwiatostan.Models.ShoppingCart", b =>
+                {
+                    b.Navigation("CartItems");
+                });
+
+            modelBuilder.Entity("Kwiatostan.Models.Product", b =>
                 {
                     b.Navigation("CartItems");
                 });
